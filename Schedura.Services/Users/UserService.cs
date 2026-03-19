@@ -55,8 +55,8 @@ public class UserService(
 		return new DeleteUserResult(true);
 	}
 
-	public Task<PagedResult<UserResult>> SearchAsync(SearchUsersParams @params, CancellationToken cancellationToken = default) {
-		return userRepository.GetUserReportByUiFilters(@params.Query, cancellationToken);
+	public Task<PagedResult<UserResult>> GetUsersReportByUiFiltersAsync(GetUsersReportByUiFiltersParams @params, CancellationToken cancellationToken = default) {
+		return userRepository.GetUsersReportByUiFilters(@params.Query, cancellationToken);
 	}
 
 	private static UserResult ToResult(User user) {

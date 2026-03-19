@@ -50,11 +50,11 @@ public class UserApplication(
 		}, cancellationToken);
 	}
 
-	public async Task<SearchUsersResponse> SearchAsync(SearchUsersRequest request, CancellationToken cancellationToken = default) {
-		var @params = mapper.Map<SearchUsersParams>(request);
-		var paged = await userService.SearchAsync(@params, cancellationToken);
+	public async Task<GetUsersReportByUiFiltersResponse> GetUsersReportByUiFiltersAsync(GetUsersReportByUiFiltersRequest request, CancellationToken cancellationToken = default) {
+		var @params = mapper.Map<GetUsersReportByUiFiltersParams>(request);
+		var paged = await userService.GetUsersReportByUiFiltersAsync(@params, cancellationToken);
 		var items = mapper.Map<IReadOnlyList<UserResponse>>(paged.Items);
-		return new SearchUsersResponse(items, paged.TotalCount);
+		return new GetUsersReportByUiFiltersResponse(items, paged.TotalCount);
 	}
 
 	private async Task<T> ExecuteInTransactionAsync<T>(Func<CancellationToken, Task<T>> action, CancellationToken cancellationToken) {

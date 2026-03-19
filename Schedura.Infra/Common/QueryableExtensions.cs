@@ -27,6 +27,30 @@ public static class QueryableExtensions
 
 		return new PagedResult<T>(items.AsReadOnly(), totalCount);
 	}
+
+	public static async Task<PagedResult<TResult>> ApplyUiFilters<TEntity, TResult>(
+		this IQueryable<TEntity> query,
+		PagedQuery pagedQuery,
+		Expression<Func<TEntity, TResult>> projection,
+		CancellationToken cancellationToken = default)
+		where TEntity : class
+		where TResult : class
+	{
+		var predicate = FilterExpressionBuilder.Build<TEntity>(pagedQuery.Filters, pagedQuery.LogicOperator);
+		if (predicate is not null) query = query.Where(predicate);
+
+		var totalCount = await query.CountAsync(cancellationToken);
+
+		query = QuerySortBuilder.Apply(query, pagedQuery.Sort);
+
+		var items = await query
+			.Skip(pagedQuery.Page * pagedQuery.PageSize)
+			.Take(pagedQuery.PageSize)
+			.Select(projection)
+			.ToListAsync(cancellationToken);
+
+		return new PagedResult<TResult>(items.AsReadOnly(), totalCount);
+	}
 }
 
 file static class QuerySortBuilder

@@ -21,13 +21,15 @@ public class UserApplicationMappingProfile : Profile {
 		CreateMap<UpdateUserResult, UpdateUserResponse>();
 		CreateMap<DeleteUserResult, DeleteUserResponse>();
 
-		CreateMap<PagedRequest, DomainCommon.PagedQuery>().ConstructUsing((src, _) => new DomainCommon.PagedQuery(
-			src.Page, src.PageSize,
-			src.Sort.Select(s => new DomainCommon.SortDescriptor(s.Field, s.Sort == "desc")).ToList(),
-			src.Filters.Select(f => new DomainCommon.FilterDescriptor(f.Field, f.Operator, f.Value)).ToList(),
-			(DomainCommon.FilterLogicOperator)(int)src.LogicOperator));
+		CreateMap<PagedRequest, DomainCommon.PagedQuery>()
+			.ConstructUsing((src, _) => new DomainCommon.PagedQuery(
+				src.Page, src.PageSize,
+				src.Sort.Select(s => new DomainCommon.SortDescriptor(s.Field, s.Sort == "desc")).ToList(),
+				src.Filters.Select(f => new DomainCommon.FilterDescriptor(f.Field, f.Operator, f.Value)).ToList(),
+				(DomainCommon.FilterLogicOperator)(int)src.LogicOperator))
+			.ForAllMembers(opt => opt.Ignore());
 
-		CreateMap<SearchUsersRequest, SearchUsersParams>()
-			.ConstructUsing((src, ctx) => new SearchUsersParams(ctx.Mapper.Map<DomainCommon.PagedQuery>(src.Paged)));
+		CreateMap<GetUsersReportByUiFiltersRequest, GetUsersReportByUiFiltersParams>()
+			.ConstructUsing((src, ctx) => new GetUsersReportByUiFiltersParams(ctx.Mapper.Map<DomainCommon.PagedQuery>(src.Paged)));
 	}
 }

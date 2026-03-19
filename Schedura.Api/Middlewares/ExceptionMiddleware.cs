@@ -17,9 +17,9 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
 		logger.LogError(exception, "Unhandled exception while processing request.");
 
 		var (statusCode, title) = exception switch {
-			ValidationException validationException when IsConflictValidation(validationException) => (StatusCodes.Status409Conflict, "Business conflict"),
-			ValidationException => (StatusCodes.Status422UnprocessableEntity, "Business validation error"),
-			_ => (StatusCodes.Status500InternalServerError, "Internal server error")
+			ValidationException validationException when IsConflictValidation(validationException) => (StatusCodes.Status409Conflict, "Conflito de dados"),
+			ValidationException => (StatusCodes.Status422UnprocessableEntity, "Erro de validação"),
+			_ => (StatusCodes.Status500InternalServerError, "Erro interno no servidor. Tente novamente mais tarde.")
 		};
 
 		context.Response.StatusCode = statusCode;

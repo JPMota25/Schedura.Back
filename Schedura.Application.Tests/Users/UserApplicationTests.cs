@@ -130,8 +130,8 @@ public class UserApplicationTests {
 			return Task.FromResult(DeleteResult);
 		}
 
-		public Task<Schedura.Domain.Interfaces.Common.PagedResult<UserResult>> SearchAsync(
-			SearchUsersParams @params, CancellationToken cancellationToken = default) {
+		public Task<Schedura.Domain.Interfaces.Common.PagedResult<UserResult>> GetUsersReportByUiFiltersAsync(
+			GetUsersReportByUiFiltersParams @params, CancellationToken cancellationToken = default) {
 			throw new NotImplementedException();
 		}
 	}

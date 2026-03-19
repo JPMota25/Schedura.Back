@@ -19,12 +19,14 @@ public class UserRepository(AppDbContext context)
 			.FirstOrDefaultAsync(cancellationToken);
 	}
 
-	public async Task<PagedResult<UserResult>> GetUserReportByUiFilters(PagedQuery query, CancellationToken cancellationToken = default) {
+	public async Task<PagedResult<UserResult>> GetUsersReportByUiFilters(PagedQuery query, CancellationToken cancellationToken = default) {
 		var baseQuery = _context.Users
 			.Where(u => u.DeletedAt == null)
-			.AsNoTracking()
-			.Select(u => new UserResult(u.Id, u.Username, u.PersonId, u.CreatedAt, u.UpdatedAt));
+			.AsNoTracking();
 
-		return await baseQuery.ApplyUiFilters(query, cancellationToken);
+		return await baseQuery.ApplyUiFilters(
+			query,
+			u => new UserResult(u.Id, u.Username, u.PersonId, u.CreatedAt, u.UpdatedAt),
+			cancellationToken);
 	}
 }

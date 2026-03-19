@@ -28,6 +28,6 @@ public record UpdateUserResponse(bool Found);
 
 public record DeleteUserResponse(bool Found);
 
-public record SearchUsersRequest(PagedRequest Paged);
+public record GetUsersReportByUiFiltersRequest(PagedRequest Paged);
 
-public record SearchUsersResponse(IReadOnlyList<UserResponse> Items, int TotalCount);
+public record GetUsersReportByUiFiltersResponse(IReadOnlyList<UserResponse> Items, int TotalCount);

@@ -8,5 +8,5 @@ public interface IUserService {
 	Task<UserResult?> GetByIdAsync(GetUserByIdParams @params, CancellationToken cancellationToken = default);
 	Task<UpdateUserResult> UpdateAsync(UpdateUserInput input, CancellationToken cancellationToken = default);
 	Task<DeleteUserResult> DeleteAsync(DeleteUserInput input, CancellationToken cancellationToken = default);
-	Task<PagedResult<UserResult>> SearchAsync(SearchUsersParams @params, CancellationToken cancellationToken = default);
+	Task<PagedResult<UserResult>> GetUsersReportByUiFiltersAsync(GetUsersReportByUiFiltersParams @params, CancellationToken cancellationToken = default);
 }

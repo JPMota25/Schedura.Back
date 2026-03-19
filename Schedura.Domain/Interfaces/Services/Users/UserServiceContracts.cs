@@ -18,4 +18,4 @@ public record UpdateUserResult(bool Found);
 
 public record DeleteUserResult(bool Found);
 
-public record SearchUsersParams(PagedQuery Query);
+public record GetUsersReportByUiFiltersParams(PagedQuery Query);

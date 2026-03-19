@@ -42,10 +42,10 @@ public class UsersController(IUserApplication userApplication) : ControllerBase 
 	}
 
 	[HttpPost("search")]
-	public async Task<ActionResult<ApiResponse<SearchUsersResponse>>> Search(
-		[FromBody] SearchUsersRequest request,
+	public async Task<ActionResult<ApiResponse<GetUsersReportByUiFiltersResponse>>> GetUsersReportByUiFilters(
+		[FromBody] GetUsersReportByUiFiltersRequest request,
 		CancellationToken cancellationToken) {
-		var result = await userApplication.SearchAsync(request, cancellationToken);
-		return Ok(ApiResponse<SearchUsersResponse>.Ok(result));
+		var result = await userApplication.GetUsersReportByUiFiltersAsync(request, cancellationToken);
+		return Ok(ApiResponse<GetUsersReportByUiFiltersResponse>.Ok(result));
 	}
 }

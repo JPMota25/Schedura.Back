@@ -102,7 +102,7 @@ public class UserServiceTests {
 			return Task.FromResult(CreatedUsers.FirstOrDefault(x => x.Username == username));
 		}
 
-		public Task<Schedura.Domain.Interfaces.Common.PagedResult<UserResult>> GetUserReportByUiFilters(
+		public Task<Schedura.Domain.Interfaces.Common.PagedResult<UserResult>> GetUsersReportByUiFilters(
 			Schedura.Domain.Interfaces.Common.PagedQuery query, CancellationToken cancellationToken = default) {
 			throw new NotImplementedException();
 		}
