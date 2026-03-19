@@ -6,7 +6,7 @@ using Schedura.Domain.Interfaces.Services.Persons;
 namespace Schedura.Services.Persons;
 
 public class PersonService(
-	IGenericRepository<Person, string> personRepository,
+	IPersonRepository personRepository,
 	IValidator<CreatePersonInput> createPersonValidator) : IPersonService {
 	public async Task<PersonResult> CreateAsync(CreatePersonInput input, CancellationToken cancellationToken = default) {
 		await createPersonValidator.ValidateAndThrowAsync(input, cancellationToken);
@@ -25,6 +25,11 @@ public class PersonService(
 
 		await personRepository.CreateAsync(person, cancellationToken);
 		return ToResult(person);
+	}
+
+	public async Task<IReadOnlyList<PersonResult>> GetByFiltersAsync(GetPersonByFiltersParams @params, CancellationToken cancellationToken = default) {
+		var persons = await personRepository.GetByFiltersAsync(@params.Search, @params.Limit, cancellationToken);
+		return persons.Select(ToResult).ToList();
 	}
 
 	private static PersonResult ToResult(Person person) {

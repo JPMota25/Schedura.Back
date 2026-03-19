@@ -1,5 +1,5 @@
 using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
+using Schedura.Api.Common;
 
 namespace Schedura.Api.Middlewares;
 
@@ -16,34 +16,21 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
 	private async Task HandleExceptionAsync(HttpContext context, Exception exception) {
 		logger.LogError(exception, "Unhandled exception while processing request.");
 
-		var (statusCode, title, code) = exception switch {
-			ValidationException validationException when IsConflictValidation(validationException) => (StatusCodes.Status409Conflict, "Business conflict", "BUSINESS_CONFLICT"),
-			ValidationException => (StatusCodes.Status422UnprocessableEntity, "Business validation error", "BUSINESS_VALIDATION"),
-			_ => (StatusCodes.Status500InternalServerError, "Internal server error", "UNHANDLED_ERROR")
+		var (statusCode, title) = exception switch {
+			ValidationException validationException when IsConflictValidation(validationException) => (StatusCodes.Status409Conflict, "Business conflict"),
+			ValidationException => (StatusCodes.Status422UnprocessableEntity, "Business validation error"),
+			_ => (StatusCodes.Status500InternalServerError, "Internal server error")
 		};
 
 		context.Response.StatusCode = statusCode;
 		context.Response.ContentType = "application/json";
 
-		var problemDetails = new ProblemDetails {
-			Status = statusCode,
-			Title = title,
-			Detail = exception is ValidationException fluentValidationException
-				? string.Join("; ", fluentValidationException.Errors.Select(x => x.ErrorMessage).Distinct())
-				: exception.Message,
-			Type = $"https://httpstatuses.com/{statusCode}"
-		};
-		problemDetails.Extensions["traceId"] = context.TraceIdentifier;
-		problemDetails.Extensions["code"] = code;
-		if (exception is ValidationException ex) {
-			problemDetails.Extensions["errors"] = ex.Errors.Select(x => new {
-				field = x.PropertyName,
-				message = x.ErrorMessage,
-				code = x.ErrorCode
-			});
-		}
+		IEnumerable<string> errors = exception is ValidationException ve
+			? ve.Errors.Select(e => e.ErrorMessage).Distinct()
+			: [title];
 
-		await context.Response.WriteAsJsonAsync(problemDetails);
+		var apiResponse = ApiResponse.Fail(errors);
+		await context.Response.WriteAsJsonAsync(apiResponse);
 	}
 
 	private static bool IsConflictValidation(ValidationException validationException) {

@@ -6,4 +6,5 @@ public interface IUserApplication {
 	Task<UserResponse?> GetByIdAsync(GetUserByIdRequest request, CancellationToken cancellationToken = default);
 	Task<UpdateUserResponse> UpdateAsync(string id, UpdateUserRequest request, CancellationToken cancellationToken = default);
 	Task<DeleteUserResponse> DeleteAsync(DeleteUserRequest request, CancellationToken cancellationToken = default);
+	Task<SearchUsersResponse> SearchAsync(SearchUsersRequest request, CancellationToken cancellationToken = default);
 }

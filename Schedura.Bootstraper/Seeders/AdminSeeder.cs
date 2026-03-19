@@ -1,9 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Schedura.Domain.Entities;
+using Schedura.Domain.Enums;
 using Schedura.Infra.Data;
+using Schedura.Services.Users;
 
-namespace Schedura.Infra.Seeders;
+namespace Schedura.Bootstraper.Seeders;
 
 public static class AdminSeeder {
 	private static readonly string[] SystemActions = [

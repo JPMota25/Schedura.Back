@@ -59,7 +59,7 @@ public class UserServiceTests {
 		Assert.StartsWith("PBKDF2$", existingUser.Password, StringComparison.Ordinal);
 	}
 
-	private sealed class InMemoryUserRepository : IGenericRepository<User, string> {
+	private sealed class InMemoryUserRepository : IUserRepository {
 		public List<User> CreatedUsers { get; } = [];
 		public int UpdateCalls { get; private set; }
 		public User? UserById { get; set; }
@@ -96,6 +96,15 @@ public class UserServiceTests {
 
 		public Task<User?> GetByIdAsNoTrackingAsync(string id, CancellationToken cancellationToken = default) {
 			return GetByIdAsync(id, cancellationToken);
+		}
+
+		public Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default) {
+			return Task.FromResult(CreatedUsers.FirstOrDefault(x => x.Username == username));
+		}
+
+		public Task<Schedura.Domain.Interfaces.Common.PagedResult<UserResult>> GetUserReportByUiFilters(
+			Schedura.Domain.Interfaces.Common.PagedQuery query, CancellationToken cancellationToken = default) {
+			throw new NotImplementedException();
 		}
 	}
 }

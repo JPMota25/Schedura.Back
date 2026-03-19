@@ -1,12 +1,13 @@
 using FluentValidation;
 using Schedura.Domain.Entities;
+using Schedura.Domain.Interfaces.Common;
 using Schedura.Domain.Interfaces.Repositories;
 using Schedura.Domain.Interfaces.Services.Users;
 
 namespace Schedura.Services.Users;
 
 public class UserService(
-	IGenericRepository<User, string> userRepository,
+	IUserRepository userRepository,
 	IValidator<CreateUserInput> createUserValidator,
 	IValidator<UpdateUserInput> updateUserValidator) : IUserService {
 	public async Task<UserResult> CreateAsync(CreateUserInput input, CancellationToken cancellationToken = default) {
@@ -52,6 +53,10 @@ public class UserService(
 
 		await userRepository.DeleteAsync(user, cancellationToken);
 		return new DeleteUserResult(true);
+	}
+
+	public Task<PagedResult<UserResult>> SearchAsync(SearchUsersParams @params, CancellationToken cancellationToken = default) {
+		return userRepository.GetUserReportByUiFilters(@params.Query, cancellationToken);
 	}
 
 	private static UserResult ToResult(User user) {

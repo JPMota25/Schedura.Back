@@ -27,3 +27,5 @@ public record PersonResult(
 	PersonType PersonType,
 	DateTimeOffset CreatedAt,
 	DateTimeOffset? UpdatedAt);
+
+public record GetPersonByFiltersParams(string? Search, int Limit = 10);

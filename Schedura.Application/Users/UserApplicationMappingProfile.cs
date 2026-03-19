@@ -1,6 +1,8 @@
 using AutoMapper;
+using Schedura.Application.Contracts.Common;
 using Schedura.Application.Contracts.Users;
 using Schedura.Domain.Interfaces.Services.Users;
+using DomainCommon = Schedura.Domain.Interfaces.Common;
 
 namespace Schedura.Application.Users;
 
@@ -18,5 +20,14 @@ public class UserApplicationMappingProfile : Profile {
 		CreateMap<UserResult, UserResponse>();
 		CreateMap<UpdateUserResult, UpdateUserResponse>();
 		CreateMap<DeleteUserResult, DeleteUserResponse>();
+
+		CreateMap<PagedRequest, DomainCommon.PagedQuery>().ConstructUsing((src, _) => new DomainCommon.PagedQuery(
+			src.Page, src.PageSize,
+			src.Sort.Select(s => new DomainCommon.SortDescriptor(s.Field, s.Sort == "desc")).ToList(),
+			src.Filters.Select(f => new DomainCommon.FilterDescriptor(f.Field, f.Operator, f.Value)).ToList(),
+			(DomainCommon.FilterLogicOperator)(int)src.LogicOperator));
+
+		CreateMap<SearchUsersRequest, SearchUsersParams>()
+			.ConstructUsing((src, ctx) => new SearchUsersParams(ctx.Mapper.Map<DomainCommon.PagedQuery>(src.Paged)));
 	}
 }

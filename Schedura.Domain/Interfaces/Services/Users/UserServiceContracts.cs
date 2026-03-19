@@ -1,3 +1,5 @@
+using Schedura.Domain.Interfaces.Common;
+
 namespace Schedura.Domain.Interfaces.Services.Users;
 
 public record CreateUserInput(string Username, string Password, string PersonId);
@@ -15,3 +17,5 @@ public record UserResult(string Id, string Username, string PersonId, DateTimeOf
 public record UpdateUserResult(bool Found);
 
 public record DeleteUserResult(bool Found);
+
+public record SearchUsersParams(PagedQuery Query);

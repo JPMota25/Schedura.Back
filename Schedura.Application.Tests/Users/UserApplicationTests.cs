@@ -129,6 +129,11 @@ public class UserApplicationTests {
 		public Task<DeleteUserResult> DeleteAsync(DeleteUserInput input, CancellationToken cancellationToken = default) {
 			return Task.FromResult(DeleteResult);
 		}
+
+		public Task<Schedura.Domain.Interfaces.Common.PagedResult<UserResult>> SearchAsync(
+			SearchUsersParams @params, CancellationToken cancellationToken = default) {
+			throw new NotImplementedException();
+		}
 	}
 
 	private sealed class FakePersonService : IPersonService {
@@ -150,6 +155,10 @@ public class UserApplicationTests {
 				input.PersonType,
 				DateTimeOffset.UtcNow,
 				null));
+		}
+
+		public Task<IReadOnlyList<PersonResult>> GetByFiltersAsync(GetPersonByFiltersParams @params, CancellationToken cancellationToken = default) {
+			return Task.FromResult<IReadOnlyList<PersonResult>>([]);
 		}
 	}
 }

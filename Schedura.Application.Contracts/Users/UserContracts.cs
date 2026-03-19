@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Schedura.Application.Contracts.Common;
 using Schedura.Application.Contracts.Persons;
 
 namespace Schedura.Application.Contracts.Users;
@@ -26,3 +27,7 @@ public record UserResponse(string Id, string Username, string PersonId, DateTime
 public record UpdateUserResponse(bool Found);
 
 public record DeleteUserResponse(bool Found);
+
+public record SearchUsersRequest(PagedRequest Paged);
+
+public record SearchUsersResponse(IReadOnlyList<UserResponse> Items, int TotalCount);

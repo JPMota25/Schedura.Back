@@ -19,6 +19,11 @@ public static class ServiceCollectionExtensions
                 sqlOptions.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
         services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IPersonRepository, PersonRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserGroupRepository, UserGroupRepository>();
+        services.AddScoped<IPermissionRepository, PermissionRepository>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
         return services;
     }

@@ -94,5 +94,9 @@ public class PersonApplicationTests {
 				DateTimeOffset.UtcNow,
 				null));
 		}
+
+		public Task<IReadOnlyList<PersonResult>> GetByFiltersAsync(GetPersonByFiltersParams @params, CancellationToken cancellationToken = default) {
+			return Task.FromResult<IReadOnlyList<PersonResult>>([]);
+		}
 	}
 }

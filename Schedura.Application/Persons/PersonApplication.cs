@@ -17,6 +17,12 @@ public class PersonApplication(
 		}, cancellationToken);
 	}
 
+	public async Task<IReadOnlyList<PersonResponse>> GetByFiltersAsync(GetPersonByFiltersRequest request, CancellationToken cancellationToken = default) {
+		var @params = mapper.Map<GetPersonByFiltersParams>(request);
+		var results = await personService.GetByFiltersAsync(@params, cancellationToken);
+		return mapper.Map<IReadOnlyList<PersonResponse>>(results);
+	}
+
 	private async Task<T> ExecuteInTransactionAsync<T>(Func<CancellationToken, Task<T>> action, CancellationToken cancellationToken) {
 		await unitOfWork.BeginTransactionAsync(cancellationToken);
 		try {

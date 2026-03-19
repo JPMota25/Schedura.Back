@@ -22,6 +22,44 @@ namespace Schedura.Infra.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Schedura.Domain.Entities.Permission", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(32)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(32)");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Action")
+                        .IsUnique();
+
+                    b.ToTable("Permissions", (string)null);
+                });
+
             modelBuilder.Entity("Schedura.Domain.Entities.Person", b =>
                 {
                     b.Property<string>("Id")
@@ -92,6 +130,53 @@ namespace Schedura.Infra.Migrations
                     b.ToTable("Persons", (string)null);
                 });
 
+            modelBuilder.Entity("Schedura.Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(32)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(32)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeviceInfo")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTimeOffset>("ExpiresAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("RevokedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(32)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens", (string)null);
+                });
+
             modelBuilder.Entity("Schedura.Domain.Entities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -135,6 +220,91 @@ namespace Schedura.Infra.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
+            modelBuilder.Entity("Schedura.Domain.Entities.UserGroup", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(32)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(32)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("UserGroups", (string)null);
+                });
+
+            modelBuilder.Entity("Schedura.Domain.Entities.UserGroupPermission", b =>
+                {
+                    b.Property<string>("UserGroupId")
+                        .HasMaxLength(32)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(32)");
+
+                    b.Property<string>("PermissionId")
+                        .HasMaxLength(32)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(32)");
+
+                    b.HasKey("UserGroupId", "PermissionId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("UserGroupPermissions", (string)null);
+                });
+
+            modelBuilder.Entity("Schedura.Domain.Entities.UserUserGroup", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasMaxLength(32)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(32)");
+
+                    b.Property<string>("UserGroupId")
+                        .HasMaxLength(32)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(32)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("UserId", "UserGroupId");
+
+                    b.HasIndex("UserGroupId");
+
+                    b.ToTable("UserUserGroups", (string)null);
+                });
+
+            modelBuilder.Entity("Schedura.Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("Schedura.Domain.Entities.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Schedura.Domain.Entities.User", b =>
                 {
                     b.HasOne("Schedura.Domain.Entities.Person", "Person")
@@ -144,6 +314,63 @@ namespace Schedura.Infra.Migrations
                         .IsRequired();
 
                     b.Navigation("Person");
+                });
+
+            modelBuilder.Entity("Schedura.Domain.Entities.UserGroupPermission", b =>
+                {
+                    b.HasOne("Schedura.Domain.Entities.Permission", "Permission")
+                        .WithMany("UserGroupPermissions")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Schedura.Domain.Entities.UserGroup", "Group")
+                        .WithMany("Permissions")
+                        .HasForeignKey("UserGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Permission");
+                });
+
+            modelBuilder.Entity("Schedura.Domain.Entities.UserUserGroup", b =>
+                {
+                    b.HasOne("Schedura.Domain.Entities.UserGroup", "Group")
+                        .WithMany("UserGroups")
+                        .HasForeignKey("UserGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Schedura.Domain.Entities.User", "User")
+                        .WithMany("Groups")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Schedura.Domain.Entities.Permission", b =>
+                {
+                    b.Navigation("UserGroupPermissions");
+                });
+
+            modelBuilder.Entity("Schedura.Domain.Entities.User", b =>
+                {
+                    b.Navigation("Groups");
+
+                    b.Navigation("RefreshTokens");
+                });
+
+            modelBuilder.Entity("Schedura.Domain.Entities.UserGroup", b =>
+                {
+                    b.Navigation("Permissions");
+
+                    b.Navigation("UserGroups");
                 });
 #pragma warning restore 612, 618
         }

@@ -31,7 +31,7 @@ public class PersonServiceTests {
 		Assert.Equal("123.456.789-01", result.FormattedDocument);
 	}
 
-	private sealed class InMemoryPersonRepository : IGenericRepository<Person, string> {
+	private sealed class InMemoryPersonRepository : IPersonRepository {
 		public List<Person> CreatedPersons { get; } = [];
 
 		public Task<Person> CreateAsync(Person entity, CancellationToken cancellationToken = default) {
@@ -61,6 +61,10 @@ public class PersonServiceTests {
 
 		public Task<Person?> GetByIdAsNoTrackingAsync(string id, CancellationToken cancellationToken = default) {
 			return GetByIdAsync(id, cancellationToken);
+		}
+
+		public Task<IReadOnlyList<Person>> GetByFiltersAsync(string? search, int limit, CancellationToken cancellationToken = default) {
+			return Task.FromResult((IReadOnlyList<Person>)CreatedPersons);
 		}
 	}
 }

@@ -21,5 +21,7 @@ public class PersonApplicationMappingProfile : Profile {
 
 		CreateMap<PersonResult, PersonResponse>()
 			.ForCtorParam(nameof(PersonResponse.PersonType), opt => opt.MapFrom(src => (int)src.PersonType));
+
+		CreateMap<GetPersonByFiltersRequest, GetPersonByFiltersParams>();
 	}
 }
