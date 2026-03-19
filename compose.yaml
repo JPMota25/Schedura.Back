@@ -1,0 +1,7 @@
+﻿services:
+  slotme:
+    image: slotme
+    build:
+      context: .
+      dockerfile: Schedura/Dockerfile
+
